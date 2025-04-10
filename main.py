@@ -17,4 +17,8 @@ def deserialize_car_object(json: bytes) -> Car:
     data = JSONParser().parse(stream)
     serializer = CarSerializer(data=data)
     serializer.is_valid(raise_exception=True)
-    return Car(**serializer.validated_data)
+    validated_data = serializer.validated_data.copy()
+    car_id = validated_data.pop("id", None)
+
+    car = Car(id=car_id, **validated_data)
+    return car
